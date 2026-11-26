@@ -1,0 +1,4 @@
+# Cache das imagens (vale no Cloudflare Pages; o GitHub Pages ignora este arquivo).
+# 1 dia: se trocar uma imagem sem mudar o nome, quem já visitou vê a nova em até 1 dia.
+/img/*
+  Cache-Control: public, max-age=86400
