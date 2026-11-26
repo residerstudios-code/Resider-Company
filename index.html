@@ -1,6 +1,7 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-FwPimOI7sMeX4zEwCL+j2nA6fHNtrXIQ+6K53GfFQTk=' 'sha256-BKr3YjZGkcwq6s8TQ0DIbuEROGXNxOfhI1oykgSS+Pk=' 'sha256-6chqAKq5axxH+zOCHAgq1o5LSccpK3NykvI8svx0hT8=' 'sha256-Wt0AW8Ok1LTX+zpzbfGElPvb6iO9D+LHxBBdl0CzNes=' 'sha256-uWpD9uaDabdQc55SyOWL7cG4q8x07aV8qLyxAVS+w+o=' 'sha256-rAr42+2gQs2poyrA8aCYV1awwltyKwfThsjG8t4YBgs=' 'sha256-kzRXjQfAFZPcvYO9J11jziCHXhg+fBhavD4ntcEtZiI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://mxnrxgrlrhofllesgxzm.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <meta charset="utf-8">
 <title>Resider Company</title>
+<script src="loja.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Unbounded:wght@300;500;700&display=swap" rel="stylesheet">
 <style>
@@ -222,6 +223,11 @@ footer{margin-top:clamp(60px,9vw,130px);background:var(--bg2);padding:clamp(40px
 .news form{display:flex;gap:10px;align-items:center;margin-top:34px}
 .news input{flex:1;height:44px;border:1px solid rgba(0,0,0,.14);border-radius:999px;padding:0 18px;font:inherit;background:rgba(255,255,255,.5);outline:0;transition:border-color .3s}
 .news input:focus{border-color:var(--navy)}
+.news form{flex-wrap:wrap}
+.news .nfc{flex-basis:100%;font-size:11px;color:var(--mute);display:flex;gap:8px;align-items:flex-start}
+.news .nfc input{flex:none;height:auto;margin-top:2px;padding:0}
+.nfc a{text-decoration:underline}
+.lojaid{margin-top:28px;font-size:11px;color:var(--mute);white-space:pre-line}
 .fbot{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:30px;align-items:end}
 .big{font-family:var(--brand);font-weight:700;font-size:clamp(26px,5vw,72px);line-height:.9;letter-spacing:-.02em;text-transform:uppercase}
 .fcol h5{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);margin-bottom:12px;font-weight:500}
@@ -898,14 +904,15 @@ html .rb-card{position:absolute;inset:0;height:auto!important;width:auto!importa
 <footer id="sobre">
   <div class="news">
     <div><div class="k">Newsletter</div><h4>Receba ofertas exclusivas e acesso antecipado aos novos produtos.</h4></div>
-    <form id="nf"><label class="sr" for="em">E-mail</label><input id="em" type="email" placeholder="Seu e-mail" required maxlength="254" autocomplete="email" inputmode="email" spellcheck="false"><button class="btn dark" type="submit">Cadastrar</button></form>
+    <form id="nf"><label class="sr" for="em">E-mail</label><input id="em" type="email" placeholder="Seu e-mail" required maxlength="254" autocomplete="email" inputmode="email" spellcheck="false"><button class="btn dark" type="submit">Cadastrar</button><label class="nfc"><input type="checkbox" id="nfOk"> Aceito receber e-mails da Resider Company e li a <a href="privacidade.html">Política de Privacidade</a>.</label></form>
   </div>
   <div class="fbot">
     <div class="big">Resider<br>Company</div>
     <div class="fcol"><h5>Loja</h5><a href="#novidades">Novas peças</a><a href="#hero">Camisetas</a></div>
-    <div class="fcol"><h5>Ajuda</h5><a href="#">Trocas e devoluções</a><a href="#">Tabela de medidas</a><a href="#">Envio</a><a href="#">Contato</a></div>
-    <div class="fcol"><h5>Social</h5><a href="#">Instagram</a><a href="#">TikTok</a><a href="#">WhatsApp</a></div>
+    <div class="fcol"><h5>Ajuda</h5><a href="trocas.html">Trocas e devoluções</a><a href="envio.html">Envio</a><a href="pagamento.html">Pagamento</a><a href="contato.html">Contato</a></div>
+    <div class="fcol"><h5>Legal</h5><a href="privacidade.html">Privacidade</a><a href="termos.html">Termos de uso</a></div>
   </div>
+  <div class="lojaid" data-loja="id"></div>
   <div class="copy"><span>© 2026 Resider Company</span><span>All rights reserved, made in Brasil</span></div>
 </footer>
 
@@ -1453,7 +1460,7 @@ function addToBag(p,c,s,fromEl){
   toast('Adicionada à sacola');
 }
 /* "Finalizar pedido": exige login e pede os dados de entrega (ver bloco LOGIN mais abaixo) */
-$('#checkout').onclick=()=>{if(!bag.length){toast('Adicione uma peça primeiro');return}authUser?openForm('order'):openAuth('li','checkout')};
+$('#checkout').onclick=()=>{if(!bag.length){toast('Adicione uma peça primeiro');return}if(!window.LOJA.vendasAtivas){toast('As vendas ainda não abriram');return}authUser?openForm('order'):openAuth('li','checkout')};
 
 /* ---------- PRODUTO ---------- */
 function fillModal(){
@@ -1477,7 +1484,18 @@ $('#searchBtn').onclick=()=>{runSearch('');open('#search');setTimeout(()=>$('#sq
 $('#sq').oninput=e=>runSearch(e.target.value);
 $('#accBtn').onclick=()=>authUser?openAccount():openAuth('li',null);
 $('#curBtn').onclick=()=>toast('Moeda: Real (BRL)');
-$('#nf').onsubmit=e=>{e.preventDefault();toast('Cadastro feito! Obrigado.');e.target.reset()};
+const SB=window.LOJA.supabaseUrl+'/rest/v1/',SBH={apikey:window.LOJA.supabaseKey};
+const nfBtn=$('#nf button');
+if(!window.LOJA.email){nfBtn.disabled=true;$('#em').disabled=true;$('#em').placeholder='Em breve'}
+$('#nf').onsubmit=async e=>{e.preventDefault();const f=e.target,em=$('#em').value.trim().toLowerCase();
+  if(!window.LOJA.email||nfBtn.disabled)return;
+  if(!$('#nfOk').checked){toast('Marque o aceite para se cadastrar');return}
+  nfBtn.disabled=true;
+  try{const r=await fetch(SB+'newsletter',{method:'POST',headers:{...SBH,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify({email:em})});
+    if(r.ok||r.status===409){toast('Cadastro feito! Obrigado.');f.reset()}else toast('Não foi possível cadastrar agora')}
+  catch(x){toast('Sem conexão. Tente de novo.')}
+  nfBtn.disabled=false;
+};
 $('#aboutBtn').onclick=e=>{e.preventDefault();$('#sobre').scrollIntoView({behavior:'smooth'})};
 // clicar em "Resider Company": fecha qualquer peça aberta/janela e volta ao começo do site
 $('.brand').addEventListener('click',e=>{e.preventDefault();
@@ -1514,6 +1532,8 @@ async function hashPw(pw,salt){
   return b64(await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:150000,hash:'SHA-256'},k,256));
 }
 let authUser=null,authIntent=null;
+// apaga contas, dados de entrega e pedidos de teste guardados no navegador por versões anteriores
+if(!window.LOJA.vendasAtivas)['rc_users','rc_sess','rc_orders'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});
 (function(){const e=ST.g('rc_sess');if(e&&getUsers()[e])authUser=e})();
 const AU=$('#auth'),AC=$('#acard');
 const firstName=()=>((getUsers()[authUser]||{}).name||'').trim().split(/\s+/)[0]||'';
@@ -1521,6 +1541,7 @@ function showErr(id,m){$(id).textContent=m||''}
 function clearErrs(){['#eLogin','#eSign','#eShip'].forEach(i=>showErr(i,''));$$('#auth [aria-invalid]').forEach(x=>x.removeAttribute('aria-invalid'))}
 function setMode(m){AC.classList.remove('m-auth','m-form','m-done','m-rev','m-acct');AC.classList.add(m)}
 function openAuth(go,why){
+  if(!window.LOJA.vendasAtivas){closeAll();toast('Vendas e contas em breve');return}
   closeAll();authIntent=why||null;clearErrs();setMode('m-auth');AC.classList.toggle('su',go==='su');
   AU.classList.add('on');lock(true);setTimeout(()=>{try{$(go==='su'?'#suN':'#lgE').focus({preventScroll:true})}catch(e){}},500);
 }
@@ -1620,6 +1641,7 @@ $('#rvOk').onclick=()=>{
   bag=[];renderBag();setMode('m-done');
 };
 function openAccount(){
+  if(!window.LOJA.vendasAtivas){openAuth();return}
   const u=getUsers()[authUser];if(!u){openAuth('li',null);return}
   const pr=u.profile||{},cp=digits(pr.cpf||''),od=jget('rc_orders',[]),mine=(Array.isArray(od)?od:[]).filter(o=>o&&o.u===authUser);
   fillList($('#acList'),[['Nome',u.name||pr.name||'—'],['E-mail',authUser],['CPF',cp.length===11?'•••.•••.•••-'+cp.slice(9):'Não informado'],['Telefone',pr.tel||'Não informado'],['Entrega',pr.rua?addrLine(pr):'Não informado'],['Pedidos',mine.length?mine.slice(-3).reverse().map(o=>o.id+' · '+brl(o.total)).join('\n'):'Nenhum pedido ainda']]);
@@ -1641,6 +1663,11 @@ $('#doneBtn').onclick=closeAuth;
 if(authUser)$('#accBtn').setAttribute('aria-label','Minha conta ('+firstName()+')');
 
 refresh();renderBag();
+// preços vêm do banco; se ele não responder, ficam os do arquivo
+fetch(SB+'products?select=id,price_cents',{headers:SBH}).then(r=>r.ok?r.json():[]).then(l=>{
+  l.forEach(x=>{const p=byId[x.id];if(p&&Number.isInteger(x.price_cents))p.price=x.price_cents/100});
+  if(l.length){refresh();renderBag()}
+}).catch(()=>{});
 </script>
 
 
