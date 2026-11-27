@@ -1,4 +1,4 @@
-<!doctype html><html lang="pt-BR"><head><meta charset=utf8><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-pHeIKvUTMokxTfr0LR2EEMQuq99Zv3j0WHlcLMJoXC4=' 'sha256-BKr3YjZGkcwq6s8TQ0DIbuEROGXNxOfhI1oykgSS+Pk=' 'sha256-6chqAKq5axxH+zOCHAgq1o5LSccpK3NykvI8svx0hT8=' 'sha256-CQdI2ylpT0IzfZIiTzXNB9larpoMHX7WsXLHcKnip10=' 'sha256-uWpD9uaDabdQc55SyOWL7cG4q8x07aV8qLyxAVS+w+o=' 'sha256-rAr42+2gQs2poyrA8aCYV1awwltyKwfThsjG8t4YBgs=' 'sha256-kzRXjQfAFZPcvYO9J11jziCHXhg+fBhavD4ntcEtZiI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://mxnrxgrlrhofllesgxzm.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="pt-BR"><head><meta charset=utf8><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-RbCAX/Ohzu80eRDbOjJT9YdNZzcSf2Alxbm6oMYkqMM=' 'sha256-o3nX/aKnl/knCEYT+u30gBY+T2Z1pF7cn38o7Ffey58=' 'sha256-R2F3ei9fgXzbAWJTxFx8CM6hgFM/iL9+fQr2zj3HCGY=' 'sha256-CQdI2ylpT0IzfZIiTzXNB9larpoMHX7WsXLHcKnip10=' 'sha256-uWpD9uaDabdQc55SyOWL7cG4q8x07aV8qLyxAVS+w+o=' 'sha256-rAr42+2gQs2poyrA8aCYV1awwltyKwfThsjG8t4YBgs=' 'sha256-kzRXjQfAFZPcvYO9J11jziCHXhg+fBhavD4ntcEtZiI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://mxnrxgrlrhofllesgxzm.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <meta charset="utf-8">
 <title>Resider Company</title>
 <script src="loja.js"></script>
@@ -1116,14 +1116,15 @@ function ringT(d){
 }
 const tfStr=t=>`translate(-50%,-50%) translate3d(${t.x}vw,${t.y}${t.yu||'vh'},0) rotate(${t.r}deg) scale(${t.s})`;
 const wrapF=x=>((x+NP/2)%NP+NP)%NP-NP/2;
-const REDUCE=false; // o carrossel sempre anima (gira e flutua), mesmo se o Windows estiver com 'animações' desligadas
+const REDUCE=false; // o giro do carrossel sempre anima, mesmo se o Windows estiver com 'animações' desligadas
+const PARADO=matchMedia('(hover:hover) and (pointer:fine)').matches; // PC (mouse): nada flutua sozinho, as camisetas só andam ao girar
 let rotCur=0,spin0=null,loopRaf=0,ringOn=false,ringTimer=0,mxT=0,mx=0,fling=null,quickNext=false;
 const FLING_TAU=2600,FLING_START=.0008,FLING_GAIN=.6,FLING_MAX=.0036,FLING_SNAP=.001,SNAP_LEAD=380,FLING_W=.0045; // giro: menos veloz, desliza por mais tempo; no fim encaixa por uma mola contínua (sem parar e arrancar) // inércia: v em peças/ms; some em ~1s e encaixa numa camiseta
 function draw(now){
   const Wf=WVW(),ph=now/1000;
   cts.forEach((e,i)=>{
     const t=ringT(wrapF(i-rotCur));
-    if(!REDUCE){ // flutuação suave de cada peça (cada uma com seu ritmo) + paralaxe com o mouse
+    if(!REDUCE&&!PARADO){ // flutuação suave de cada peça (cada uma com seu ritmo) + paralaxe com o mouse
       t.y+=Wf*.026*Math.sin(ph*1.05+i*1.7);
       t.r+=1.2*Math.sin(ph*.8+i*2.3);
       t.x+=mx*Wf*.035*(1-t.s)*8;
@@ -1155,7 +1156,7 @@ function tick(now){
   }
   mx+=(mxT-mx)*.06;
   draw(now);
-  if(spin0||fling||!REDUCE)loopRaf=requestAnimationFrame(tick);
+  if(spin0||fling||(!REDUCE&&!PARADO))loopRaf=requestAnimationFrame(tick);
 }
 function settle(){ // encaixa na camiseta mais próxima
   const t=Math.round(rotCur),na=((t%NP)+NP)%NP;
@@ -1706,7 +1707,7 @@ fetch(SB+'products?select=id,price_cents',{headers:SBH}).then(r=>r.ok?r.json():[
   it.addEventListener('wheel',e=>{if(Math.abs(e.deltaY)>8||Math.abs(e.deltaX)>8)enter()},{passive:true});
   /* girar a logo para todos os lados: arrasta/joga, gira com inércia e volta ao centro */
   let ay=0,ax=0,vy=0,vx=0,dr=false,lx=0,ly=0,lt=0,mv=0,fr=0,lf=0,moved=false;
-  const ap=()=>{if(!it.classList.contains('live'))return;
+  const ap=()=>{if(!it.classList.contains('live')||matchMedia('(hover:hover) and (pointer:fine)').matches)return;
     logo.style.setProperty('transform','perspective(900px) translate3d('+(hx*16).toFixed(1)+'px,'+(hy*12).toFixed(1)+'px,0) rotateX('+(ax-hy*16).toFixed(2)+'deg) rotateY('+(ay+hx*26).toFixed(2)+'deg)','important')};
   function lp(t){fr=0;const dt=Math.min(40,t-lf||16);lf=t;
     const hk=1-Math.exp(-dt/110);hx+=(hxT-hx)*hk;hy+=(hyT-hy)*hk; // a logo segue o mouse suavemente
@@ -1774,7 +1775,7 @@ fetch(SB+'products?select=id,price_cents',{headers:SBH}).then(r=>r.ok?r.json():[
       fi.setAttribute('width',w);fi.setAttribute('height',h);fi.setAttribute('preserveAspectRatio','none');fi.setAttribute('result','m');
       var dm=document.createElementNS(NS,'feDisplacementMap');
       dm.setAttribute('in','SourceGraphic');dm.setAttribute('in2','m');
-      dm.setAttribute('scale',Math.max(58,Math.min(150,Math.min(w,h)*2.5)));
+      dm.setAttribute('scale',Math.min(150,Math.min(w,h)<40?Math.min(w,h)*1.4:Math.max(58,Math.min(w,h)*2.5)));
       dm.setAttribute('xChannelSelector','R');dm.setAttribute('yChannelSelector','G');
       f.appendChild(fi);f.appendChild(dm);defs.appendChild(f);made[id]=1;return id;
     }
@@ -2315,6 +2316,41 @@ html body .round{width:76px;border-radius:999px}
 @media (min-width:701px){html body #curBtn{width:98px;height:66px;padding:0;display:flex;align-items:center;justify-content:center}}
 @media (max-width:700px){html body .round,html body #curBtn{width:54px;height:40px;min-width:0;padding:0;display:flex;align-items:center;justify-content:center}}
 @media (max-width:360px){html body .round,html body #curBtn{width:38px;height:34px}}
+/* PC (mouse): botões com cerca de metade do tamanho; celular não muda */
+@media (min-width:701px) and (hover:hover) and (pointer:fine){
+  html body header .pill{height:32px;padding:0 16px;font-size:10px}
+  html body header .pill span{font-size:10px!important}
+  html body header .round{width:50px;height:32px}
+  html body header #curBtn{width:50px;height:32px;padding:0}
+  html body header .round svg{width:16px;height:16px}
+  html body header .brand{padding:5px 15px;font-size:10px}
+  html body .round{width:50px;height:32px}
+  html body .round svg,html body .pill svg{width:16px;height:16px}
+  html body .btn,html body .pill.abtn{height:32px;min-height:0;padding-top:0;padding-bottom:0;font-size:11px}
+  html body .pill.abtn{padding-left:16px;padding-right:16px}
+  html body :is(#hBack,#hAdd,.rb-cta,#rbCta,#shBtn,#rvOk,#acEdit,#doneBtn){height:32px;min-height:0;padding-top:0;padding-bottom:0;padding-left:16px;padding-right:16px;font-size:11px}
+  html body :is(#checkout,#addBtn,#hAdd){width:auto;min-width:190px;align-self:center}
+  html body .card .quick{height:26px;min-height:0;padding:0 6px;font-size:9px;letter-spacing:.1em;white-space:nowrap;left:10%;right:10%}
+  html body .sizes .sz{height:28px;max-width:48px;font-size:10px}
+  html body .sw{width:28px;height:28px}
+  html body .sw i{width:18px;height:18px}
+  html body :is(#hero,.modal,.dpanel) .sd{height:28px;min-height:0;font-size:10px;padding-top:0;padding-bottom:0}
+  html body .rb-dock{transform-origin:bottom right;zoom:.7}
+  html body .ck-b button{height:28px;min-height:0;padding-top:0;padding-bottom:0;font-size:10px}
+}
+/* PC (mouse): entrada menor e totalmente parada (o logo continua grande) */
+@media (min-width:701px) and (hover:hover) and (pointer:fine){
+  html body .intro .intro-logo{animation:none!important}
+  /* nada fica se mexendo sozinho no PC (banners e linha de rolagem) */
+  html body :is(.bn-slide,.bn-slide *,.scrollhint i){animation:none!important}
+  html body .bn-slide .bn-panel::before,html body .bn-slide .bn-panel::after{animation:none!important}
+  html body .intro:not(.go) h1.intro-logo{transform:none!important;transition:opacity .6s ease!important;will-change:auto}
+  html body .intro .intro-logo .iw1{font-size:clamp(52px,7.6vw,108px)}
+  html body .intro .intro-logo .iw2{font-size:clamp(11px,1.2vw,16px);margin-top:16px}
+  html body .intro .intro-ui{margin-top:28px;gap:10px}
+  html body .intro #iEnter{height:28px;min-height:0;padding:0 18px;font-size:10px}
+  html body .intro .intro-hint{font-size:8px}
+}
 </style>
 <div class="ck" id="ck" role="region" aria-label="Aviso de cookies" hidden>
   <b>Cookies e privacidade</b>
