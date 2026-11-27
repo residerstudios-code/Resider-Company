@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://residercompany.com.br/sitemap.xml
