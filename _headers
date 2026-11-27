@@ -1,6 +1,8 @@
 # Cabecalhos de seguranca aplicados pelo Cloudflare Pages
 /*
   X-Content-Type-Options: nosniff
+  Strict-Transport-Security: max-age=31536000
+  X-Permitted-Cross-Domain-Policies: none
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=()
