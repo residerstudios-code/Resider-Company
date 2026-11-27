@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-H8EAKPW5/MEyEOGxoWGovZGXNjdeSCuGoOlhOLeXa1o=' 'sha256-BKr3YjZGkcwq6s8TQ0DIbuEROGXNxOfhI1oykgSS+Pk=' 'sha256-6chqAKq5axxH+zOCHAgq1o5LSccpK3NykvI8svx0hT8=' 'sha256-Wt0AW8Ok1LTX+zpzbfGElPvb6iO9D+LHxBBdl0CzNes=' 'sha256-uWpD9uaDabdQc55SyOWL7cG4q8x07aV8qLyxAVS+w+o=' 'sha256-rAr42+2gQs2poyrA8aCYV1awwltyKwfThsjG8t4YBgs=' 'sha256-kzRXjQfAFZPcvYO9J11jziCHXhg+fBhavD4ntcEtZiI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://mxnrxgrlrhofllesgxzm.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="pt-BR"><head><meta charset=utf8><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-H8EAKPW5/MEyEOGxoWGovZGXNjdeSCuGoOlhOLeXa1o=' 'sha256-BKr3YjZGkcwq6s8TQ0DIbuEROGXNxOfhI1oykgSS+Pk=' 'sha256-6chqAKq5axxH+zOCHAgq1o5LSccpK3NykvI8svx0hT8=' 'sha256-Wt0AW8Ok1LTX+zpzbfGElPvb6iO9D+LHxBBdl0CzNes=' 'sha256-uWpD9uaDabdQc55SyOWL7cG4q8x07aV8qLyxAVS+w+o=' 'sha256-rAr42+2gQs2poyrA8aCYV1awwltyKwfThsjG8t4YBgs=' 'sha256-kzRXjQfAFZPcvYO9J11jziCHXhg+fBhavD4ntcEtZiI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://mxnrxgrlrhofllesgxzm.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <meta charset="utf-8">
 <title>Resider Company</title>
 <script src="loja.js"></script>
@@ -7,7 +7,7 @@
 <style>
 :root{
   color-scheme:light;
-  --navy:#102246; --bg:#f1f1f3; --bg2:#e7e7ea; --ink:#0d0d0f; --mute:#6c6c73; --card:#e4e4e7;
+  --navy:#102246; --bg:#f1f1f3; --bg2:#e7e7ea; --ink:#0d0d0f; --mute:#5f5f67; --card:#e4e4e7;
   --font:'Inter Tight',system-ui,sans-serif; --brand:'Unbounded',system-ui,sans-serif;
   --gutter:clamp(16px,3.2vw,44px);
 }
@@ -910,7 +910,7 @@ html .rb-card{position:absolute;inset:0;height:auto!important;width:auto!importa
     <div class="big">Resider<br>Company</div>
     <div class="fcol"><h5>Loja</h5><a href="#novidades">Novas peças</a><a href="#hero">Camisetas</a></div>
     <div class="fcol"><h5>Ajuda</h5><a href="trocas.html">Trocas e devoluções</a><a href="envio.html">Envio</a><a href="pagamento.html">Pagamento</a><a href="contato.html">Contato</a></div>
-    <div class="fcol"><h5>Legal</h5><a href="privacidade.html">Privacidade</a><a href="termos.html">Termos de uso</a></div>
+    <div class="fcol"><h5>Legal</h5><a href="privacidade.html">Privacidade</a><a href="termos.html">Termos de uso</a><a href="#" id="ckOpen">Cookies</a></div>
   </div>
   <div class="lojaid" data-loja="id"></div>
   <div class="copy"><span>© 2026 Resider Company</span><span>All rights reserved, made in Brasil</span></div>
@@ -2261,4 +2261,20 @@ fetch(SB+'products?select=id,price_cents',{headers:SBH}).then(r=>r.ok?r.json():[
 </script>
 
 
+<style>
+/* acessibilidade: foco visível no teclado */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid #3f63b5!important;outline-offset:3px}
+.card .quick:focus-visible{opacity:1!important;transform:none!important}
+.hero:not(.detail) #hAdd,.hero:not(.detail) #hBack{visibility:hidden}
+/* aviso de cookies */
+.ck{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:300;width:min(560px,calc(100vw - 24px));max-height:70vh;overflow:auto;padding:18px;border-radius:20px;background:#fff;color:#0d0d0f;box-shadow:0 20px 60px rgba(16,34,70,.28);font-size:13px;line-height:1.55}
+.ck[hidden]{display:none}.ck b{display:block;margin-bottom:4px;font-size:14px}.ck a{color:#102246;text-decoration:underline}
+.ck-b{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.ck-b button{height:44px;border-radius:999px;border:1px solid #102246;background:#102246;color:#fff;font-weight:600;font-size:12.5px;cursor:pointer}
+</style>
+<div class="ck" id="ck" role="region" aria-label="Aviso de cookies" hidden>
+  <b>Cookies e privacidade</b>
+  Hoje o site não usa cookies de anúncio nem de análise. Guardamos neste aparelho só a sua escolha neste aviso. As fontes vêm do Google Fonts, que recebe dados técnicos como o endereço IP. <a href="privacidade.html">Política de Privacidade</a>.
+  <div class="ck-b"><button type="button" data-ck="necessarios">Só os necessários</button><button type="button" data-ck="todos">Permitir cookies</button></div>
+</div>
 </body></html>
