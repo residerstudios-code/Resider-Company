@@ -5,6 +5,7 @@ window.LOJA={
   endereco:'',    // endereço para contato
   email:'',       // e-mail de atendimento (libera a newsletter)
   whatsapp:'',    // com DDD
+  contasAtivas:false, // cadastro/login: ligar só depois de configurar o envio de e-mails e preencher os dados acima
   vendasAtivas:false, // NÃO mude: ligar as vendas exige também pagamento, login e banco
   supabaseUrl:'https://mxnrxgrlrhofllesgxzm.supabase.co',
   supabaseKey:'sb_publishable_IaUsvSTxzuOqLFLBHyd4gg_-8bm9qR4' // chave pública. Nunca coloque a service_role aqui.
