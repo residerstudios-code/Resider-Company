@@ -2358,6 +2358,42 @@ fetch(SB+'products?select=id,price_cents',{headers:SBH}).then(r=>r.ok?r.json():[
 
 
 <style>
+/* ===== TESTE EXPO LIQUID GLASS: botões ===== */
+html body :is(.btn:not(.line),.rb-cta,#rbCta,#shBtn,#rvOk,#acEdit,#doneBtn){
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.72)!important;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.38) 0%,rgba(255,255,255,.12) 38%,rgba(255,255,255,.04) 62%,rgba(255,255,255,.22) 100%),
+    linear-gradient(135deg,rgba(16,34,70,.88),rgba(16,34,70,.72))!important;
+  color:#fff!important;
+  -webkit-backdrop-filter:blur(18px) saturate(1.8);
+  backdrop-filter:blur(18px) saturate(1.8);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.82),inset 0 -1px 1px rgba(255,255,255,.18),0 5px 18px rgba(16,34,70,.18),0 1px 3px rgba(0,0,0,.10)!important;
+  transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s,background .28s!important;
+}
+html body :is(.btn:not(.line),.rb-cta,#rbCta,#shBtn,#rvOk,#acEdit,#doneBtn)::before{
+  content:"";
+  position:absolute;
+  inset:1px;
+  border-radius:inherit;
+  pointer-events:none;
+  z-index:-1;
+  background:linear-gradient(115deg,rgba(255,255,255,.36),transparent 34%,transparent 68%,rgba(255,255,255,.12));
+  opacity:.9;
+}
+html body :is(.btn:not(.line),.rb-cta,#rbCta,#shBtn,#rvOk,#acEdit,#doneBtn):hover{
+  transform:translateY(-2px);
+  box-shadow:inset 0 1px 1px #fff,inset 0 -1px 1px rgba(255,255,255,.24),0 9px 24px rgba(16,34,70,.24),0 2px 6px rgba(0,0,0,.12)!important;
+}
+html body :is(.btn:not(.line),.rb-cta,#rbCta,#shBtn,#rvOk,#acEdit,#doneBtn):active{
+  transform:scale(.975);
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.16),inset 0 1px 1px rgba(255,255,255,.65)!important;
+}
+@media(prefers-reduced-motion:reduce){
+  html body :is(.btn:not(.line),.rb-cta,#rbCta,#shBtn,#rvOk,#acEdit,#doneBtn){transition:none!important}
+}
 /* acessibilidade: foco visível no teclado */
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid #3f63b5!important;outline-offset:3px}
 .card .quick:focus-visible{opacity:1!important;transform:none!important}
