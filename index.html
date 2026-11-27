@@ -146,7 +146,7 @@ header>*{pointer-events:auto}
 @media (max-height:800px) and (min-width:761px){.dstory{font-size:11.5px;line-height:1.5}}
 .dpanel .lbl{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute);margin:20px 0 4px}
 .dpanel .sizes{margin-top:6px}
-.dpanel .btn{margin-top:22px;width:100%;justify-content:center}
+.dpanel .btn{margin-top:22px;width:100%;display:flex;align-items:center;justify-content:center}
 .scrollhint{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:9px;font-size:11px;font-weight:500;letter-spacing:.34em;margin-right:-.34em;text-transform:uppercase;color:var(--ink)}
 .scrollhint i{width:1px;height:34px;background:linear-gradient(var(--ink),transparent);animation:line 2s ease-in-out infinite;transform-origin:top}
 @media (hover:hover) and (pointer:fine){.scrollhint i{animation:none}}
@@ -2271,10 +2271,13 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,su
 .ck[hidden]{display:none}.ck b{display:block;margin-bottom:4px;font-size:14px}.ck a{color:#102246;text-decoration:underline}
 .ck-b{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 .ck-b button{height:44px;border-radius:999px;border:1px solid #102246;background:#102246;color:#fff;font-weight:600;font-size:12.5px;cursor:pointer}
-/* botões retangulares com cantos arredondados */
-html body :is(.btn,.btn.line,.pill,.round,.nav-arrow,.brand,.quick,.sz,.qty button,.ck-b button,.eye,.rb-i,.sres button){border-radius:12px}
-html body .rb-dock{border-radius:16px}
-html body .eye{border-radius:8px}
+/* botões redondos esticados para os lados, mantendo as pontas arredondadas */
+html body #curBtn span{line-height:1}
+html body .round{width:76px;border-radius:999px}
+@media (min-width:1100px){html body .round{width:98px}}
+@media (min-width:701px){html body #curBtn{width:98px;height:66px;padding:0;display:flex;align-items:center;justify-content:center}}
+@media (max-width:700px){html body .round,html body #curBtn{width:54px;height:40px;min-width:0;padding:0;display:flex;align-items:center;justify-content:center}}
+@media (max-width:360px){html body .round,html body #curBtn{width:38px;height:34px}}
 </style>
 <div class="ck" id="ck" role="region" aria-label="Aviso de cookies" hidden>
   <b>Cookies e privacidade</b>
