@@ -1,4 +1,4 @@
-<!doctype html><html lang="pt-BR"><head><meta charset=utf8><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-pHeIKvUTMokxTfr0LR2EEMQuq99Zv3j0WHlcLMJoXC4=' 'sha256-BKr3YjZGkcwq6s8TQ0DIbuEROGXNxOfhI1oykgSS+Pk=' 'sha256-6chqAKq5axxH+zOCHAgq1o5LSccpK3NykvI8svx0hT8=' 'sha256-rMYEzYwPaWos8UpbNjqJOH9CoisR1KPRPK1VaoM+HoU=' 'sha256-uWpD9uaDabdQc55SyOWL7cG4q8x07aV8qLyxAVS+w+o=' 'sha256-rAr42+2gQs2poyrA8aCYV1awwltyKwfThsjG8t4YBgs=' 'sha256-kzRXjQfAFZPcvYO9J11jziCHXhg+fBhavD4ntcEtZiI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://mxnrxgrlrhofllesgxzm.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html lang="pt-BR"><head><meta charset=utf8><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-pHeIKvUTMokxTfr0LR2EEMQuq99Zv3j0WHlcLMJoXC4=' 'sha256-BKr3YjZGkcwq6s8TQ0DIbuEROGXNxOfhI1oykgSS+Pk=' 'sha256-6chqAKq5axxH+zOCHAgq1o5LSccpK3NykvI8svx0hT8=' 'sha256-CQdI2ylpT0IzfZIiTzXNB9larpoMHX7WsXLHcKnip10=' 'sha256-uWpD9uaDabdQc55SyOWL7cG4q8x07aV8qLyxAVS+w+o=' 'sha256-rAr42+2gQs2poyrA8aCYV1awwltyKwfThsjG8t4YBgs=' 'sha256-kzRXjQfAFZPcvYO9J11jziCHXhg+fBhavD4ntcEtZiI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://mxnrxgrlrhofllesgxzm.supabase.co; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests"><meta name="referrer" content="strict-origin-when-cross-origin"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <meta charset="utf-8">
 <title>Resider Company</title>
 <script src="loja.js"></script>
@@ -1808,7 +1808,6 @@ fetch(SB+'products?select=id,price_cents',{headers:SBH}).then(r=>r.ok?r.json():[
     var de=document.documentElement;
     if(de.classList.contains('lg')||!window.ResizeObserver)return;
     de.classList.add('lgjs');
-    var TOQUE=window.matchMedia&&matchMedia('(pointer:coarse)').matches;if(TOQUE)de.classList.add('toque');
     var DPR=Math.min(1.5,window.devicePixelRatio||1),SS=.85,items=[],seen=new WeakSet(),maps={},bg='#f1f1f3',dead=false;
     try{bg=getComputedStyle(document.body).backgroundColor||bg}catch(e){}
     function mapFor(w,h,r,pad,sc){
@@ -1847,7 +1846,7 @@ fetch(SB+'products?select=id,price_cents',{headers:SBH}).then(r=>r.ok?r.json():[
     function scan(root){
       var list=(root.matches&&root.matches(SEL)?[root]:[]).concat([].slice.call(root.querySelectorAll?root.querySelectorAll(SEL):[]));
       list.forEach(function(el){
-        if(seen.has(el)||(TOQUE&&el.closest('header'))||el.classList.contains('panel')||el.classList.contains('toast')||el.classList.contains('abtn'))return;
+        if(seen.has(el)||el.classList.contains('panel')||el.classList.contains('toast')||el.classList.contains('abtn'))return;
         seen.add(el);var it={el:el,ok:false};el._lj=it;items.push(it);ro.observe(el);
       });
     }
@@ -2024,29 +2023,23 @@ fetch(SB+'products?select=id,price_cents',{headers:SBH}).then(r=>r.ok?r.json():[
       while(pq.length){var im=pq.shift();if(im.complete&&im.naturalWidth){pqDone.add(im);upTex(im,im.currentSrc||im.src);break}}
     }
     function frame(){
-      fn++;preload();
+      fn++;
       var nowT=performance.now(),sy0=scrollY,dtm=nowT-lastT;
       if(dtm>0){if(sy0===lastY){zf++;vs=zf>=2?0:vs*.3}else{zf=0;vs=vs*.55+((sy0-lastY)/dtm)*.45}}
       lastY=sy0;lastT=nowT;
       var pred=Math.max(-70,Math.min(70,vs*LAG));if(Math.abs(pred)<.4)pred=0;
       if(Math.abs(vs)>.5)holdUntil=nowT+140;
+      if(nowT>=holdUntil)preload();
       var hold=nowT<holdUntil&&!(AU&&AU.classList.contains('on'));
-      if(hold!==holdOn){holdOn=hold;document.documentElement.classList.toggle('lhold',hold)}
-      /* rolagem rápida: a distorção (desenhada por script) não acompanha a rolagem do celular; sai de todos os botões, inclusive os do topo, e nada pesado é calculado */
-      if(hold){
-        items.forEach(function(it){if(it.on&&!it.inAuth){it.cv.style.display='none';it.on=false}});
-        if(strip){strip.style.visibility='hidden';stripDirty=true}
-        return;
-      }
+      /* na rolagem rápida a lente continua ligada; só os recálculos pesados ficam para depois */
       var hdrList=[],touched=false;
-      var showStrip=!!strip&&strip.style.visibility==='hidden';
       var vh=innerHeight,vw=innerWidth,imgs=[],auOn=AU&&AU.classList.contains('on'),ar=null;
-      var slow=(fn%12)===1;var due=function(el){if(el._ph===undefined)el._ph=(phase++)%12;return (fn+el._ph)%12===0};
+      var slow=!hold&&(fn%12)===1;var due=function(el){if(hold)return false;if(el._ph===undefined)el._ph=(phase++)%12;return (fn+el._ph)%12===0};
       var rbFront=true;try{var rbc=document.getElementById('rbCard');if(rbc)rbFront=new DOMMatrix(getComputedStyle(rbc).transform).m33>=0}catch(e){}
       var faceOff=function(el){ // true se o elemento está numa face do cartão que está de costas para o usuário
         if(el._rf===undefined){var ff=el.closest('.rb-face');el._rf=ff?(ff.classList.contains('back')?'b':'f'):''}
         return (el._rf==='b'&&rbFront)||(el._rf==='f'&&!rbFront)};
-      if(fn===1||(dirty&&fn%20===0)||fn%240===0){dirty=false;refreshImgs()}
+      if(fn===1||(!hold&&((dirty&&fn%20===0)||fn%240===0))){dirty=false;refreshImgs()}
       if(auOn){buildAbg();ar=AU.getBoundingClientRect()}
       else imgList.forEach(function(im){
         if(!im.complete||!im.naturalWidth)return;
@@ -2099,6 +2092,8 @@ fetch(SB+'products?select=id,price_cents',{headers:SBH}).then(r=>r.ok?r.json():[
         var skip=br.width<8||br.bottom<0||br.top>vh||br.right<0||br.left>vw||it.bo||(!el.offsetParent&&getComputedStyle(el).position!=='fixed');
         if(skip){if(it.on){it.cv.style.display='none';it.on=false}return}
         var isH=!!strip&&!inAuth&&br.top>=0&&br.bottom<=STRIPH&&br.left>=0&&br.right<=vw&&(it.hd===undefined?(it.hd=!!el.closest('header')):it.hd);
+        /* rolando rápido: os botões do meio da página andam junto com o que está atrás, então mantêm a lente já desenhada */
+        if(hold&&!isH&&it.on&&it.ns)return;
         var hit=[];
         if(it.ns===undefined||slow)it.ns=nativeScroll(el);
         if(!inAuth){var dz=pred*((it.ns?1:0)-0);
@@ -2135,7 +2130,6 @@ fetch(SB+'products?select=id,price_cents',{headers:SBH}).then(r=>r.ok?r.json():[
           hdrList.forEach(function(h){drawGL(h.it,h.br,false,null,h.hit,true)});
           stripDirty=hdrList.length>0;
         }
-        if(showStrip)strip.style.visibility='';
       }
     }
     function loop(){
@@ -2297,8 +2291,6 @@ html body :is(.sz,.sd,.qty button):not(.sel){
   box-shadow:inset 1.5px 2px 2px -1px #fff,inset -1.5px -2px 2px -1px rgba(255,255,255,.85),inset 0 -10px 14px -9px rgba(90,115,175,.42),inset 0 9px 14px -9px #fff,0 6px 16px rgba(20,20,40,.13)!important}
 html body .sw{box-shadow:inset 1.5px 2px 2px -1px #fff,inset 0 -10px 14px -9px rgba(90,115,175,.45),0 6px 16px rgba(20,20,40,.14)!important}
 html body .sw.sel{box-shadow:inset 0 -10px 14px -9px rgba(90,115,175,.45),0 0 0 2px var(--navy),0 8px 18px rgba(16,34,70,.2)!important}
-/* vidro simples do topo enquanto a rolagem está rápida */
-html.lgjs.lhold body header .glass:not(.sel){background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(255,255,255,.48) 55%,rgba(255,255,255,.66))!important}
 /* entrada centralizada (o espaço depois da última letra é compensado do outro lado) */
 html body .intro .intro-stage{margin-top:0}
 html body .intro .intro-logo .iw1{margin-right:0;padding-left:.34em}
@@ -2307,17 +2299,6 @@ html body .intro .intro-hint{margin-right:0;padding-left:.34em}
 @media(max-width:760px){html body .intro .intro-logo .iw1{padding-left:.3em}}
 /* telas baixas com o aviso de cookies aberto: sobe só o necessário para não encobrir o botão */
 @media(max-height:720px){html body:has(.ck:not([hidden])) .intro .intro-stage{margin-top:-22vh}}
-/* celular: vidro do topo feito pelo próprio navegador, igual parado ou rolando (sem desenho por script) */
-html.lgjs.toque body header .glass.glass:not(.sel){
-  -webkit-backdrop-filter:blur(5px) saturate(190%) brightness(1.04)!important;backdrop-filter:blur(5px) saturate(190%) brightness(1.04)!important;
-  background:linear-gradient(135deg,rgba(255,255,255,.58),rgba(255,255,255,.32) 52%,rgba(255,255,255,.48))!important;
-  border:1px solid rgba(255,255,255,.65)!important;
-  box-shadow:inset 1.5px 2px 2px -1px #fff,inset -1.5px -2px 2px -1px rgba(255,255,255,.9),inset 0 -10px 14px -9px rgba(90,115,175,.45),inset 0 9px 14px -9px #fff,0 6px 18px rgba(20,20,40,.18)!important}
-html.lgjs.toque body header .glass.glass svg{stroke:#1f2127!important}
-/* outros botões de vidro no celular: durante a rolagem rápida continuam com corpo e brilho, sem ficar transparentes */
-html.lgjs.toque.lhold body .glass.glass:not(.panel):not(.toast):not(.sel){
-  background:linear-gradient(135deg,rgba(255,255,255,.58),rgba(255,255,255,.32) 52%,rgba(255,255,255,.48))!important;
-  box-shadow:inset 1.5px 2px 2px -1px #fff,inset -1.5px -2px 2px -1px rgba(255,255,255,.9),inset 0 -10px 14px -9px rgba(90,115,175,.45),0 6px 18px rgba(20,20,40,.18)!important}
 /* botão Entrar sem contorno; no teclado, a seta indica o foco */
 html body #iEnter,html body #iEnter:focus,html body #iEnter:focus-visible{outline:0!important;border-color:transparent}
 #iEnter:focus-visible span{display:inline-block;transform:translateX(4px)}
