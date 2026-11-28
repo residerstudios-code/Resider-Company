@@ -86,6 +86,7 @@
       value.textContent = String(Math.floor(remaining / 60)).padStart(2,"0") + ":" + String(remaining % 60).padStart(2,"0");
       if (remaining <= 0) {
         stopCountdown();
+        if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
         const status = overlay.querySelector(".rcpix-status");
         if (status && !status.textContent.toLowerCase().includes("confirmado")) status.textContent = "Este Pix expirou. Gere um novo Pix para realizar o pagamento.";
         overlay.querySelector(".rcpix-qr").hidden = true;
