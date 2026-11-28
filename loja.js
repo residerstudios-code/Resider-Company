@@ -2,7 +2,7 @@
 window.LOJA={
   nomeLegal:'Murilo Krich',   // seu nome completo ou a razão social
   documento:'13261407956',   // CNPJ (ou CPF, se vender como pessoa física)
-  endereco:'Rua Alceu Smaniotto, 665, bairro São Pedro, Porto União, SC, Brasil',    // endereço para contato
+  endereco:'',    // endereço para contato
   email:'resider.studios@gmail.com',       // e-mail de atendimento (libera a newsletter)
   whatsapp:'',    // com DDD
   contasAtivas:false, // cadastro/login: ligar só depois de configurar o envio de e-mails e preencher os dados acima
