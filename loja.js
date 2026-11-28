@@ -3,7 +3,7 @@ window.LOJA={
   nomeLegal:'Murilo Krich',   // seu nome completo ou a razão social
   documento:'13261407956',   // CNPJ (ou CPF, se vender como pessoa física)
   endereco:'',    // endereço para contato
-  email:'resider.studios@gmail.com',       // e-mail de atendimento (libera a newsletter)
+  email:'resider.studios@gmail.com',       // e-mail público de atendimento e privacidade; newsletter desativada
   whatsapp:'',    // com DDD
   contasAtivas:false, // cadastro/login: ligar só depois de configurar o envio de e-mails e preencher os dados acima
   vendasAtivas:false, // NÃO mude: ligar as vendas exige também pagamento, login e banco
