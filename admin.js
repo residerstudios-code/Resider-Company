@@ -60,22 +60,38 @@ function login() {
 }
 async function second() {
   const user = await call('/auth/v1/user');
-  let factor = (user.factors || []).find(f => f.factor_type === 'totp' && f.status === 'verified'), setup = '';
-  if (!factor) {
-    for (const f of user.factors || []) await call('/auth/v1/factors/' + f.id, {method:'DELETE'}).catch(() => {});
-    factor = await call('/auth/v1/factors', {method:'POST', body:{factor_type:'totp', friendly_name:'Painel Resider ' + Date.now()}});
+  const factors = (user.factors || []).filter(f => f.factor_type === 'totp');
+  const verified = factors.find(f => f.status === 'verified');
+
+  async function enroll() {
+    const factor = await call('/auth/v1/factors', {method:'POST', body:{factor_type:'totp', friendly_name:'Painel Resider'}});
     let qr = factor.totp.qr_code;
     if (!qr.startsWith('data:')) qr = 'data:image/svg+xml;utf8,' + encodeURIComponent(qr);
-    setup = `<h1>Configurar autenticador</h1><p class="mut">Abra o Google Authenticator ou Microsoft Authenticator no celular e escaneie este QR Code. Depois, o aplicativo mostrará um código de 6 dígitos que muda aproximadamente a cada 30 segundos.</p><img class="qr" alt="QR Code para configurar o autenticador" src="${esc(qr)}"><p class="mut">Mantenha esta tela aberta até escanear o código e confirmar o primeiro número gerado.</p>`;
+    gate(`<h1>Configurar autenticador</h1><p class="mut">Abra o Google Authenticator ou Microsoft Authenticator no celular e escaneie este QR Code. O aplicativo mostrará um código de 6 dígitos, que muda aproximadamente a cada 30 segundos.</p><img class="qr" alt="QR Code para configurar o autenticador" src="${esc(qr)}"><p class="mut">Mantenha esta tela aberta até escanear o código e confirmar o primeiro número gerado.</p><form><label>Código temporário de 6 dígitos<input name="code" placeholder="000000" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required></label><button>Confirmar configuração</button></form>`);
+    onSubmit($('#gbox form'), async data => {
+      const ch = await call(`/auth/v1/factors/${factor.id}/challenge`, {method:'POST', body:{}});
+      let verifiedSession;
+      try { verifiedSession = await call(`/auth/v1/factors/${factor.id}/verify`, {method:'POST', body:{challenge_id:ch.id, code:data.code}}); }
+      catch { throw new Error('Código incorreto ou vencido. Confira o aplicativo e tente novamente.'); }
+      save(verifiedSession);
+      if (verified) await call('/auth/v1/factors/' + verified.id, {method:'DELETE'}).catch(() => {});
+      await enter();
+    });
   }
-  /* Primeiro acesso mostra o QR; acessos seguintes pedem apenas o código atual do autenticador. */
-  gate(`${setup}<form><label>Código temporário de 6 dígitos<input name="code" aria-label="Código de 6 números" placeholder="000000" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required></label><button>Confirmar</button></form>`);
-  onSubmit($('#gbox form'), async f => {
-    const ch = await call(`/auth/v1/factors/${factor.id}/challenge`, {method:'POST', body:{}});
-    try { save(await call(`/auth/v1/factors/${factor.id}/verify`, {method:'POST', body:{challenge_id: ch.id, code: f.code}})); }
+
+  if (!verified) {
+    await enroll();
+    return;
+  }
+
+  gate(`<h1>Verificação em duas etapas</h1><p class="mut">Abra seu aplicativo autenticador e informe o código atual de 6 dígitos.</p><form><label>Código temporário<input name="code" placeholder="000000" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required></label><button>Confirmar</button></form><button type="button" class="sec" id="showQr">Preciso configurar ou trocar o autenticador</button>`);
+  onSubmit($('#gbox form'), async data => {
+    const ch = await call(`/auth/v1/factors/${verified.id}/challenge`, {method:'POST', body:{}});
+    try { save(await call(`/auth/v1/factors/${verified.id}/verify`, {method:'POST', body:{challenge_id:ch.id, code:data.code}})); }
     catch { throw new Error('Código incorreto ou vencido.'); }
     await enter();
   });
+  $('#showQr').addEventListener('click', () => busy($('#showQr'), enroll));
 }
 async function enter() {
   if (await call('/rest/v1/rpc/am_i_admin', {method:'POST', body:{}}) !== true) {
