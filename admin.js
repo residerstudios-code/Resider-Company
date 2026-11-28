@@ -66,10 +66,10 @@ async function second() {
     factor = await call('/auth/v1/factors', {method:'POST', body:{factor_type:'totp', friendly_name:'Painel Resider ' + Date.now()}});
     let qr = factor.totp.qr_code;
     if (!qr.startsWith('data:')) qr = 'data:image/svg+xml;utf8,' + encodeURIComponent(qr);
-    setup = `<p>Primeiro acesso: leia o QR Code no Google Authenticator (ou outro app de códigos).</p><img class="qr" alt="QR Code da verificação em duas etapas" src="${esc(qr)}"><p class="mut">Ou digite a chave: <code>${esc(factor.totp.secret)}</code></p>`;
+    setup = `<img class="qr" alt="QR Code da verificação em duas etapas" src="${esc(qr)}">`;
   }
-  gate(`<h1>Verificação em 2 etapas</h1>${setup}<form><label>Código de 6 números<input name="code" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required></label><button>Confirmar</button><button type="button" class="sec" id="out">Sair</button></form>`);
-  $('#out').onclick = logout;
+  /* primeiro acesso: só o QR Code e o campo do código */
+  gate(`${setup}<form><input name="code" aria-label="Código de 6 números" placeholder="Código de 6 números" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required><button>Confirmar</button></form>`);
   onSubmit($('#gbox form'), async f => {
     const ch = await call(`/auth/v1/factors/${factor.id}/challenge`, {method:'POST', body:{}});
     try { save(await call(`/auth/v1/factors/${factor.id}/verify`, {method:'POST', body:{challenge_id: ch.id, code: f.code}})); }
