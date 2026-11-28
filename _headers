@@ -11,3 +11,8 @@
 # 1 dia: se trocar uma imagem sem mudar o nome, quem ja visitou ve a nova em ate 1 dia.
 /img/*
   Cache-Control: public, max-age=86400
+
+# Painel administrativo: fora do Google e sem cache
+/admin*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
