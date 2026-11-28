@@ -4,7 +4,11 @@ const L = window.LOJA, KEY = 'rc_bag', MAX = 10;
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 let stock = null;                      // só é consultado com as vendas abertas
 const vkey = (id, c, s) => id + '|' + c + '|' + s;
-const limit = (p, c, s) => Math.min(MAX, stock ? stock.get(vkey(p.id, c, s)) || 0 : MAX);
+const limit = (p, c, s) => {
+  if (!stock) return MAX;
+  const value = stock.get(vkey(p.id, c, s));
+  return value === -1 ? MAX : Math.min(MAX, value || 0);
+};
 async function loadStock() {
   if (!L.vendasAtivas) return;
   try {
