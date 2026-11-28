@@ -124,7 +124,18 @@ const VIEWS = {
   },
   Estoque: async () => {
     const vs = await list('product_variants?select=id,product_id,color,size,stock,available&order=product_id,color,id');
-    return card('Estoque por cor e tamanho', table(['Produto','Cor','Tam.','Quantidade','À venda',''], vs.map(v => [esc(v.product_id), esc(v.color), esc(v.size), `<input type="number" min="0" max="100000" value="${v.stock}" data-stock="${v.id}" data-old="${v.stock}" aria-label="Quantidade ${esc(v.product_id)} ${esc(v.color)} ${esc(v.size)}">`, `<input type="checkbox" data-avail="${v.id}" ${v.available ? 'checked' : ''} aria-label="À venda">`, `<button class="sec" data-savestock="${v.id}">Salvar</button>`])));
+    const rows = vs.map(v => {
+      const mode = !v.available ? 'empty' : Number(v.stock) === -1 ? 'unlimited' : 'units';
+      return [esc(v.product_id), esc(v.color), esc(v.size),
+        `<select data-stock-mode="${v.id}" data-old-mode="${mode}" aria-label="Classificar estoque de ${esc(v.product_id)} ${esc(v.color)} ${esc(v.size)}"><option value="unlimited" ${mode === 'unlimited' ? 'selected' : ''}>Ilimitado</option><option value="units" ${mode === 'units' ? 'selected' : ''}>Por unidades</option><option value="empty" ${mode === 'empty' ? 'selected' : ''}>Sem estoque</option></select>`,
+        `<input type="number" min="0" max="100000" value="${Math.max(0, Number(v.stock) || 0)}" data-stock-qty="${v.id}" data-old-stock="${v.stock}" ${mode !== 'units' ? 'disabled' : ''} aria-label="Quantidade de ${esc(v.product_id)} ${esc(v.color)} ${esc(v.size)}">`,
+        `<span data-stock-status="${v.id}">${mode === 'unlimited' ? 'Ilimitado' : mode === 'empty' ? 'Sem estoque' : 'Por unidades'}</span>`,
+        `<input type="hidden" data-old-available="${v.id}" value="${v.available ? 'true' : 'false'}">`];
+    });
+    return card('Estoque por cor e tamanho',
+      '<p class="mut">Ilimitado não reduz a quantidade durante a compra. Escolha o controle de cada variação e salve tudo de uma vez.</p>' +
+      '<div class="row"><button id="saveAllStock">Salvar alterações</button></div>' +
+      table(['Produto','Cor','Tam.','Classificar por','Unidades','Situação',''], rows));
   },
   Cupons: async () => {
     const cs = await list('coupons?select=*&order=created_at.desc');
@@ -199,6 +210,41 @@ function wire() {
     const refund = f.refund.trim() ? cents(f.refund) : null;
     if (refund !== null && !(refund >= 0)) throw new Error('Valor inválido.');
     await write('order_requests?id=eq.' + el.dataset.request, 'PATCH', {status: f.status, refund_cents: refund, admin_reply: f.reply}); say('Solicitação salva.'); await show(current);
+  }));
+  document.querySelectorAll('[data-stock-mode]').forEach(sel => sel.addEventListener('change', () => {
+    const qty = $(`[data-stock-qty="${sel.dataset.stockMode}"]`);
+    const status = $(`[data-stock-status="${sel.dataset.stockMode}"]`);
+    qty.disabled = sel.value !== 'units';
+    status.textContent = sel.value === 'unlimited' ? 'Ilimitado' : sel.value === 'empty' ? 'Sem estoque' : 'Por unidades';
+  }));
+  const saveStock = $('#saveAllStock');
+  if (saveStock) saveStock.addEventListener('click', () => busy(saveStock, async () => {
+    const selects = [...document.querySelectorAll('[data-stock-mode]')];
+    let changed = 0;
+    for (const sel of selects) {
+      const id = sel.dataset.stockMode, qty = $(`[data-stock-qty="${id}"]`);
+      const oldMode = sel.dataset.oldMode, oldStock = qty.dataset.oldStock;
+      const oldAvailable = $(`[data-old-available="${id}"]`).value === 'true';
+      const mode = sel.value;
+      let stock, available;
+      if (mode === 'unlimited') { stock = -1; available = true; }
+      else if (mode === 'empty') { stock = 0; available = false; }
+      else {
+        stock = Number(qty.value);
+        if (qty.value === '' || !Number.isInteger(stock) || stock < 0 || stock > 100000) throw new Error('Informe uma quantidade válida para ' + id + '.');
+        available = true;
+      }
+      if (mode === oldMode && String(stock) === String(oldStock) && available === oldAvailable) continue;
+      const filter = `product_variants?id=eq.${Number(id)}&stock=eq.${encodeURIComponent(oldStock)}&available=eq.${oldAvailable}`;
+      await write(filter, 'PATCH', {stock, available});
+      qty.dataset.oldStock = String(stock);
+      qty.value = String(Math.max(0, stock));
+      sel.dataset.oldMode = mode;
+      $(`[data-old-available="${id}"]`).value = String(available);
+      changed++;
+    }
+    say(changed ? `Alterações salvas em ${changed} variação(ões).` : 'Nenhuma alteração pendente.');
+    await show(current);
   }));
 }
 document.addEventListener('click', e => {
