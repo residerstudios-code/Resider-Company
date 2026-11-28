@@ -84,7 +84,9 @@ async function enter() {
 }
 
 /* ---------- telas ---------- */
-const orders = () => list('orders?select=*,order_items(*)&order=created_at.desc&limit=1000');
+/* anotações ficam numa tabela que só o admin lê */
+const note = o => [].concat(o.order_notes || [])[0]?.note || '';
+const orders = () => list('orders?select=*,order_items(*),order_notes(note)&order=created_at.desc&limit=1000');
 const card = (title, html) => `<div class="card"><h2>${title}</h2>${html}</div>`;
 const table = (head, rows, empty = 'Nada por aqui ainda.') => rows.length ? `<div class="scroll"><table><thead><tr>${head.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : `<p class="mut">${empty}</p>`;
 const kpis = a => `<div class="kpis">${a.map(([n, v]) => `<div class="card"><span>${n}</span><strong>${v}</strong></div>`).join('')}</div>`;
@@ -97,7 +99,7 @@ function chart(points) {
 function top(entries, n = 5) { return Object.entries(entries).sort((a, b) => b[1] - a[1]).slice(0, n); }
 const who = o => o.shipping?.name || 'Cliente';
 const sale = o => o.paid_at || o.created_at;
-const orderTable = a => table(['Pedido','Data','Cliente','Total','Status',''], a.map(o => [`#${o.id}${o.admin_note?.startsWith('ATENCAO') ? ' ⚠️' : ''}`, day(o.created_at), esc(who(o)), money(o.total_cents), tag(o.status), `<button class="sec" data-order="${o.id}">Abrir</button>`]));
+const orderTable = a => table(['Pedido','Data','Cliente','Total','Status',''], a.map(o => [`#${o.id}${note(o).startsWith('ATENCAO') ? ' ⚠️' : ''}`, day(o.created_at), esc(who(o)), money(o.total_cents), tag(o.status), `<button class="sec" data-order="${o.id}">Abrir</button>`]));
 
 const VIEWS = {
   Resumo: async () => {
@@ -141,15 +143,18 @@ const VIEWS = {
 };
 
 async function detail(id) {
-  const [o] = await list(`orders?select=*,order_items(*)&id=eq.${Number(id)}`);
+  const [o] = await list(`orders?select=*,order_items(*),order_notes(note)&id=eq.${Number(id)}`);
   if (!o) return say('Pedido não encontrado.');
   const next = {aguardando_pagamento:['cancelado'], pago:['enviado','cancelado'], enviado:['entregue','cancelado'], entregue:[], cancelado:[]}[o.status];
   const a = o.shipping || {};
-  $('#view').innerHTML = `<div><button class="sec" data-back>← Voltar</button></div><h1>Pedido #${o.id} ${tag(o.status)}</h1><div class="cols">${card('Itens', table(['Produto','Cor','Tam.','Qtd.','Valor'], o.order_items.map(i => [esc(i.product_name), esc(i.color), esc(i.size), i.quantity, money(i.unit_price_cents * i.quantity)])) + `<p>Desconto: ${money(o.discount_cents)} ${esc(o.coupon_code)}<br>Frete: ${money(o.shipping_cents)}<br><b>Total: ${money(o.total_cents)}</b></p><p class="mut">Pagamento: ${o.paid_at ? 'confirmado em ' + day(o.paid_at) + ' · MP ' + esc(o.mercadopago_payment_id) : 'não confirmado'}</p>`)}${card('Entrega', `<p>${esc(a.name)}<br>${esc(a.street)}, ${esc(a.number)} ${esc(a.complement)}<br>${esc(a.district)} · ${esc(a.city)}/${esc(a.state)}<br>CEP ${esc(a.cep)}<br>Telefone ${esc(a.phone)}<br>CPF ${esc(a.cpf)}</p>`)}</div><form class="card" id="editOrder"><div class="row"><label>Transportadora<input name="carrier" maxlength="60" value="${esc(o.carrier)}"></label><label>Código de rastreio<input name="tracking_code" maxlength="60" value="${esc(o.tracking_code)}"></label><label>Mudar status<select name="status"><option value="">Manter</option>${next.map(s => `<option value="${s}">${NAMES[s]}</option>`).join('')}</select></label></div><label>Anotação interna<textarea name="admin_note" maxlength="1000">${esc(o.admin_note)}</textarea></label><button>Salvar</button><p class="mut">“Pago” só é marcado pelo Mercado Pago. Cancelar é definitivo.</p></form>`;
+  $('#view').innerHTML = `<div><button class="sec" data-back>← Voltar</button></div><h1>Pedido #${o.id} ${tag(o.status)}</h1><div class="cols">${card('Itens', table(['Produto','Cor','Tam.','Qtd.','Valor'], o.order_items.map(i => [esc(i.product_name), esc(i.color), esc(i.size), i.quantity, money(i.unit_price_cents * i.quantity)])) + `<p>Desconto: ${money(o.discount_cents)} ${esc(o.coupon_code)}<br>Frete: ${money(o.shipping_cents)}<br><b>Total: ${money(o.total_cents)}</b></p><p class="mut">Pagamento: ${o.paid_at ? 'confirmado em ' + day(o.paid_at) + ' · MP ' + esc(o.mercadopago_payment_id) : 'não confirmado'}</p>`)}${card('Entrega', `<p>${esc(a.name)}<br>${esc(a.street)}, ${esc(a.number)} ${esc(a.complement)}<br>${esc(a.district)} · ${esc(a.city)}/${esc(a.state)}<br>CEP ${esc(a.cep)}<br>Telefone ${esc(a.phone)}<br>CPF ${esc(a.cpf)}</p>`)}</div><form class="card" id="editOrder"><div class="row"><label>Transportadora<input name="carrier" maxlength="60" value="${esc(o.carrier)}"></label><label>Código de rastreio<input name="tracking_code" maxlength="60" value="${esc(o.tracking_code)}"></label><label>Mudar status<select name="status"><option value="">Manter</option>${next.map(s => `<option value="${s}">${NAMES[s]}</option>`).join('')}</select></label></div><label>Anotação interna<textarea name="admin_note" maxlength="1000">${esc(note(o))}</textarea></label><button>Salvar</button><p class="mut">“Pago” só é marcado pelo Mercado Pago. Cancelar é definitivo.</p></form>`;
   onSubmit($('#editOrder'), async f => {
     if (f.status === 'cancelado' && !confirm('Cancelar o pedido? Não dá para desfazer. Se já foi pago, faça o reembolso no Mercado Pago.')) return;
     if (!f.status) delete f.status;
-    await write('orders?id=eq.' + o.id, 'PATCH', f); say('Pedido salvo.'); await detail(o.id);
+    const {admin_note, ...data} = f;
+    await write('orders?id=eq.' + o.id, 'PATCH', data);
+    await call('/rest/v1/order_notes', {method:'POST', body:{order_id: o.id, note: admin_note}, headers:{Prefer:'resolution=merge-duplicates'}});
+    say('Pedido salvo.'); await detail(o.id);
   });
 }
 

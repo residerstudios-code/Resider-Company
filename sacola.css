@@ -1,0 +1,11 @@
+.ln .sub{display:block}
+.lines .frete,#acOrders .frete{font-size:12px;color:var(--mute);margin:8px 0}
+.ln .qty button:disabled{opacity:.35;cursor:not-allowed}
+#sizes .sz.esgotado{text-decoration:line-through;opacity:.4;cursor:not-allowed}
+.cupom{display:grid;gap:4px;font-size:12px;margin-bottom:10px}
+.cupom input,#acOrders select,#acOrders textarea{font:inherit;font-size:16px;padding:9px 12px;border:1px solid rgba(128,128,128,.4);border-radius:10px;background:transparent;color:inherit;width:100%}
+#acOrders{text-align:left;margin:14px 0}
+#acOrders .ped{border-top:1px solid rgba(128,128,128,.3);padding:10px 0;font-size:14px}
+#acOrders summary{cursor:pointer}
+#acOrders p{margin:6px 0}
+#acOrders form{display:grid;gap:8px;margin-top:10px}

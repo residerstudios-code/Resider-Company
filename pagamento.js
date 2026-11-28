@@ -1,5 +1,6 @@
 /* Integração do checkout Resider — o token do Mercado Pago nunca passa pelo navegador. */
 (() => {
+  let pending = null; // se o pagamento falhar, tentar de novo usa o mesmo pedido (não reserva estoque duas vezes)
   const runCheckout = async (event) => {
     const button = event.target.closest("#rvOk");
     if (!button) return;
@@ -18,12 +19,17 @@
 
     button.disabled = true;
     try {
-      const orderId = await rest("rpc/create_order", {
-        method: "POST",
-        body: { items: bag.map((item) => ({
-          product_id: item.p.id, color: item.c, size: item.s, quantity: item.q
-        })) }
-      });
+      const body = { items: bag.map((item) => ({
+        product_id: item.p.id, color: item.c, size: item.s, quantity: item.q
+      })), coupon: document.getElementById("cupom")?.value.trim() || null };
+      const signature = sess.refresh_token + JSON.stringify(body);
+      const orderId = pending?.signature === signature ? pending.id
+        : await rest("rpc/create_order", { method: "POST", body }).catch((e) => {
+          const known = ["Estoque insuficiente", "Cupom invalido", "Produto indisponivel", "Complete os dados de entrega", "Muitos pedidos aguardando pagamento"]
+            .find((m) => JSON.stringify([e.message, e.data, e.body]).includes(m));
+          throw new Error(known ? known.replace("invalido", "inválido").replace("indisponivel", "indisponível") : "Não foi possível registrar o pedido agora.");
+        });
+      pending = { signature, id: orderId };
       const accessToken = await token();
       const response = await fetch(window.LOJA.supabaseUrl + "/functions/v1/create-payment", {
         method: "POST",
