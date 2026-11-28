@@ -84,14 +84,14 @@ async function second() {
     return;
   }
 
-  gate(`<h1>Verificação em duas etapas</h1><p class="mut">Se você ainda precisa do QR Code, toque no botão abaixo para configurar o Google Authenticator ou Microsoft Authenticator. Se já configurou, informe o código atual de 6 dígitos.</p><button type="button" id="showQr">MOSTRAR QR CODE / CONFIGURAR AUTENTICADOR</button><form><label>Código temporário<input name="code" placeholder="000000" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required></label><button>Confirmar código</button></form>`);
+  gate(`<h1>Verificação em duas etapas</h1><p class="mut">Se você ainda precisa do QR Code, toque no botão abaixo para configurar o Google Authenticator ou Microsoft Authenticator. Se já configurou, informe o código atual de 6 dígitos.</p><button type="button" id="showQr">GERAR QR CODE AGORA</button><form><label>Código temporário<input name="code" placeholder="000000" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required></label><button>Confirmar código</button></form>`);
   onSubmit($('#gbox form'), async data => {
     const ch = await call(`/auth/v1/factors/${verified.id}/challenge`, {method:'POST', body:{}});
     try { save(await call(`/auth/v1/factors/${verified.id}/verify`, {method:'POST', body:{challenge_id:ch.id, code:data.code}})); }
     catch { throw new Error('Código incorreto ou vencido.'); }
     await enter();
   });
-  $('#showQr').addEventListener('click', () => busy($('#showQr'), enroll));
+  $('#showQr').addEventListener('click', async () => { const btn = $('#showQr'); btn.disabled = true; btn.textContent = 'GERANDO QR CODE...'; try { await enroll(); } catch (e) { btn.disabled = false; btn.textContent = 'TENTAR GERAR QR CODE NOVAMENTE'; say('Não foi possível gerar o QR Code: ' + e.message); } });
 }
 async function enter() {
   if (await call('/rest/v1/rpc/am_i_admin', {method:'POST', body:{}}) !== true) {
