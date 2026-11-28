@@ -3,6 +3,8 @@
   let pending = null;
   let overlay = null;
   let pollTimer = null;
+  let countdownTimer = null;
+  let pixExpiresAt = null;
   let currentOrderId = null;
 
   const make = (tag, cls, text) => {
@@ -22,6 +24,8 @@
       .rcpix-close{font-size:25px;width:36px;height:36px;border-radius:50%;background:#e9e9ed;cursor:pointer}
       .rcpix-note{color:#60606a;font-size:13px;margin:8px 0 16px;line-height:1.5}
       .rcpix-status{padding:11px 13px;border-radius:12px;background:#ececf0;font-size:13px;margin:12px 0;text-align:center}
+      .rcpix-countdown{display:none;text-align:center;font-size:14px;font-weight:700;letter-spacing:.04em;margin:8px 0;color:#17171b}
+      .rcpix-countdown strong{font-variant-numeric:tabular-nums;font-size:22px;margin-left:6px}
       .rcpix-qr{display:block;width:min(100%,240px);height:auto;aspect-ratio:1;object-fit:contain;background:#fff;border-radius:12px;margin:16px auto;padding:8px}
       .rcpix-code{width:100%;min-height:88px;resize:vertical;border:1px solid #d7d7dc;border-radius:12px;background:#fff;padding:12px;font:12px/1.45 ui-monospace,monospace;color:#17171b}
       .rcpix-btn{width:100%;min-height:46px;border-radius:12px;padding:12px 16px;background:#111827;color:white;font-weight:600;margin-top:10px;cursor:pointer}
@@ -41,6 +45,8 @@
     head.append(title, close);
     const note = make("p", "rcpix-note", "Abra o aplicativo do seu banco, escolha Pix e escaneie o QR Code ou copie o código abaixo.");
     const status = make("div", "rcpix-status", "Gerando seu Pix…"); status.id = "rcpixStatus";
+    const countdown = make("div", "rcpix-countdown"); countdown.setAttribute("aria-live","off"); countdown.textContent = "Pix expira em ";
+    const countdownValue = make("strong", "rcpix-countdown-value", "59:59"); countdown.append(countdownValue);
     const qr = make("img", "rcpix-qr"); qr.alt = "QR Code Pix"; qr.hidden = true;
     const code = make("textarea", "rcpix-code"); code.readOnly = true; code.placeholder = "O código Pix aparecerá aqui"; code.setAttribute("aria-label", "Pix copia e cola");
     const copy = make("button", "rcpix-btn", "Copiar código Pix"); copy.type = "button"; copy.disabled = true;
@@ -53,7 +59,7 @@
     const retry = make("button", "rcpix-btn secondary", "Gerar outro Pix"); retry.type = "button"; retry.hidden = true;
     retry.addEventListener("click", () => { if (currentOrderId) startPayment(currentOrderId); });
     const help = make("p", "rcpix-help", "A confirmação é automática. Não feche a página antes de concluir o pagamento.");
-    card.append(head, note, status, qr, code, copy, retry, help);
+    card.append(head, note, status, countdown, qr, code, copy, retry, help);
     overlay.append(card);
     overlay.addEventListener("click", e => { if (e.target === overlay) overlay.classList.remove("on"); });
     document.addEventListener("keydown", e => { if (e.key === "Escape") overlay.classList.remove("on"); });
@@ -66,6 +72,31 @@
     ensurePixModal();
     document.getElementById("rcpixStatus").textContent = message;
   }
+  function stopCountdown() { if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; } }
+
+  function startCountdown(expiration) {
+    stopCountdown();
+    const box = overlay.querySelector(".rcpix-countdown");
+    const value = overlay.querySelector(".rcpix-countdown-value");
+    const end = new Date(expiration || "").getTime();
+    if (!Number.isFinite(end)) { box.style.display = "none"; pixExpiresAt = null; return; }
+    pixExpiresAt = end; box.style.display = "block";
+    const tick = () => {
+      const remaining = Math.max(0, Math.ceil((pixExpiresAt - Date.now()) / 1000));
+      value.textContent = String(Math.floor(remaining / 60)).padStart(2,"0") + ":" + String(remaining % 60).padStart(2,"0");
+      if (remaining <= 0) {
+        stopCountdown();
+        const status = overlay.querySelector(".rcpix-status");
+        if (status && !status.textContent.toLowerCase().includes("confirmado")) status.textContent = "Este Pix expirou. Gere um novo Pix para realizar o pagamento.";
+        overlay.querySelector(".rcpix-qr").hidden = true;
+        overlay.querySelector(".rcpix-code").hidden = true;
+        overlay.querySelector(".rcpix-btn").hidden = true;
+        overlay.querySelector(".rcpix-btn.secondary").hidden = false;
+      }
+    };
+    tick(); countdownTimer = setInterval(tick, 1000);
+  }
+
   function showPayment(data) {
     ensurePixModal();
     const qr = overlay.querySelector(".rcpix-qr");
@@ -82,6 +113,7 @@
     }
     const status = String(data.status || "pending");
     if (status === "approved") {
+      stopCountdown(); overlay.querySelector(".rcpix-countdown").style.display = "none";
       setStatus("Pagamento confirmado! Seu pedido foi aprovado.");
       qr.hidden = true; code.hidden = true; copy.hidden = true; retry.hidden = true;
       if (Array.isArray(bag)) bag = [];
@@ -91,11 +123,13 @@
       if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
       if (typeof toast === "function") toast("Pix confirmado! Seu pedido está pago.");
     } else if (["rejected", "cancelled"].includes(status)) {
+      stopCountdown(); overlay.querySelector(".rcpix-countdown").style.display = "none";
       setStatus("Este Pix não foi aprovado. Você pode gerar uma nova cobrança para o mesmo pedido.");
       retry.hidden = false;
     } else {
       setStatus("Aguardando pagamento… Assim que o banco confirmar, seu pedido será atualizado automaticamente.");
       retry.hidden = true;
+      startCountdown(data.date_of_expiration);
     }
   }
 
@@ -144,7 +178,8 @@
     const code = overlay.querySelector(".rcpix-code");
     const copy = overlay.querySelector(".rcpix-btn");
     const retry = overlay.querySelector(".rcpix-btn.secondary");
-    qr.hidden = true; code.hidden = false; code.value = ""; copy.disabled = true; retry.hidden = true;
+    stopCountdown(); overlay.querySelector(".rcpix-countdown").style.display = "none";
+    qr.hidden = true; code.hidden = false; code.value = ""; copy.hidden = false; copy.disabled = true; retry.hidden = true;
     try {
       const data = await callPayment(orderId);
       showPayment(data);
