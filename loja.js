@@ -6,7 +6,7 @@ window.LOJA={
   email:'resider.studios@gmail.com',       // e-mail público de atendimento e privacidade; newsletter desativada
   whatsapp:'',    // com DDD
   contasAtivas:true, // cadastro/login habilitado
-  vendasAtivas:false, // NÃO mude: ligar as vendas exige também pagamento, login e banco
+  vendasAtivas:true, // Checkout Mercado Pago ativo; confirmação exclusivamente pelo webhook
   supabaseUrl:'https://mxnrxgrlrhofllesgxzm.supabase.co',
   supabaseKey:'sb_publishable_IaUsvSTxzuOqLFLBHyd4gg_-8bm9qR4' // chave pública. Nunca coloque a service_role aqui.
 };
