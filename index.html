@@ -1043,7 +1043,9 @@ html .rb-card{position:absolute;inset:0;height:auto!important;width:auto!importa
 
     <div class="aview vacct">
       <div class="fwrap">
-        <h2>Minha conta</h2>
+        <p class="lead" style="letter-spacing:.18em;text-transform:uppercase">Área de membros · Resider Company</p>
+        <h2 id="acWelcome">Boas-vindas à Resider</h2>
+        <p class="lead">Que bom ter você aqui. Acompanhe seus dados e seus pedidos em um só lugar.</p>
         <dl class="rvl" id="acList"></dl>
         <div class="frow"><button class="alink" id="acOut" type="button">Sair da conta</button><button class="pill abtn" id="acEdit" type="button">Editar dados</button></div>
       </div>
@@ -1625,7 +1627,8 @@ function bad(el,errId,msg){const w=el.closest('.af,.ff');w&&w.setAttribute('aria
 const mailOk=v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
 function afterLogin(){
   $('#accBtn').setAttribute('aria-label','Minha conta ('+firstName()+')');
-  if(authIntent==='checkout'&&bag.length)openForm('order');else{closeAuth();toast('Olá, '+firstName())}
+  if(authIntent==='checkout'&&bag.length){openForm('order');return}
+  openAccount();
 }
 $('#fLogin').addEventListener('submit',async e=>{e.preventDefault();clearErrs();
   const f=e.target,E=$('#lgE'),P=$('#lgP'),em=E.value.trim().toLowerCase();
@@ -1726,6 +1729,7 @@ async function openAccount(){
   try{pr=await carregaPerfil();mine=await rest('orders?select=id,total_cents,status&order=created_at.desc&limit=3')||[]}
   catch(x){if(!sess||x.status===401){setSess(null);openAuth('li',null)}else toast(msgErro(x));return}
   const cp=digits(pr.cpf||'');
+  $('#acWelcome').textContent='Boas-vindas, '+(firstName()||'à Resider')+'!';
   fillList($('#acList'),[['Nome',pr.name||sess.name||'—'],['E-mail',authUser],['CPF',cp.length===11?'•••.•••.•••-'+cp.slice(9):'Não informado'],['Telefone',pr.tel||'Não informado'],['Entrega',pr.rua?addrLine(pr):'Não informado'],['Pedidos',mine.length?mine.map(o=>'Nº '+o.id+' · '+brl(o.total_cents/100)+' · '+(STATUS[o.status]||o.status)).join('\n'):'Nenhum pedido ainda']]);
   clearErrs();closeAll();setMode('m-acct');AU.classList.add('on');lock(true);
 }
