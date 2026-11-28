@@ -1,5 +1,7 @@
 /* Painel Resider. A segurança fica no banco (RLS + 2 etapas); esta tela só mostra o que o servidor libera. */
 (() => {
+/* o painel só abre em computador; em celular e tablet volta para a loja (conveniência, não é a proteção: essa é a senha + 2 etapas + banco) */
+if (!matchMedia('(hover:hover) and (pointer:fine)').matches) { location.replace('/'); return; }
 const L = window.LOJA, KEY = 'rc_admin';
 const $ = (s, el = document) => el.querySelector(s);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
