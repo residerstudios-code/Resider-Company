@@ -66,10 +66,10 @@ async function second() {
     factor = await call('/auth/v1/factors', {method:'POST', body:{factor_type:'totp', friendly_name:'Painel Resider ' + Date.now()}});
     let qr = factor.totp.qr_code;
     if (!qr.startsWith('data:')) qr = 'data:image/svg+xml;utf8,' + encodeURIComponent(qr);
-    setup = `<img class="qr" alt="QR Code da verificação em duas etapas" src="${esc(qr)}">`;
+    setup = `<h1>Configurar autenticador</h1><p class="mut">Abra o Google Authenticator ou Microsoft Authenticator no celular e escaneie este QR Code. Depois, o aplicativo mostrará um código de 6 dígitos que muda aproximadamente a cada 30 segundos.</p><img class="qr" alt="QR Code para configurar o autenticador" src="${esc(qr)}"><p class="mut">Mantenha esta tela aberta até escanear o código e confirmar o primeiro número gerado.</p>`;
   }
-  /* primeiro acesso: só o QR Code e o campo do código */
-  gate(`${setup}<form><input name="code" aria-label="Código de 6 números" placeholder="Código de 6 números" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required><button>Confirmar</button></form>`);
+  /* Primeiro acesso mostra o QR; acessos seguintes pedem apenas o código atual do autenticador. */
+  gate(`${setup}<form><label>Código temporário de 6 dígitos<input name="code" aria-label="Código de 6 números" placeholder="000000" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required></label><button>Confirmar</button></form>`);
   onSubmit($('#gbox form'), async f => {
     const ch = await call(`/auth/v1/factors/${factor.id}/challenge`, {method:'POST', body:{}});
     try { save(await call(`/auth/v1/factors/${factor.id}/verify`, {method:'POST', body:{challenge_id: ch.id, code: f.code}})); }
