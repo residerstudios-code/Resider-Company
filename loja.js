@@ -1,9 +1,9 @@
 /* DADOS DA LOJA — preencha entre as aspas. Não invente: use só dados reais. */
 window.LOJA={
   nomeLegal:'',   // seu nome completo ou a razão social
-  documento:'',   // CNPJ (ou CPF, se vender como pessoa física)
-  endereco:'',    // endereço para contato
-  email:'',       // e-mail de atendimento (libera a newsletter)
+  documento:'13261407956',   // CNPJ (ou CPF, se vender como pessoa física)
+  endereco:'Rua Alceus Manioto, 665, bairro São Pedro, Porto União, SC, Brasil',    // endereço para contato
+  email:'resider.studios@gmail.com',       // e-mail de atendimento (libera a newsletter)
   whatsapp:'',    // com DDD
   contasAtivas:false, // cadastro/login: ligar só depois de configurar o envio de e-mails e preencher os dados acima
   vendasAtivas:false, // NÃO mude: ligar as vendas exige também pagamento, login e banco
