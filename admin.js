@@ -84,7 +84,7 @@ async function second() {
     return;
   }
 
-  gate(`<h1>Verificação em duas etapas</h1><p class="mut">Abra seu aplicativo autenticador e informe o código atual de 6 dígitos.</p><form><label>Código temporário<input name="code" placeholder="000000" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required></label><button>Confirmar</button></form><button type="button" class="sec" id="showQr">Preciso configurar ou trocar o autenticador</button>`);
+  gate(`<h1>Verificação em duas etapas</h1><p class="mut">Se você ainda precisa do QR Code, toque no botão abaixo para configurar o Google Authenticator ou Microsoft Authenticator. Se já configurou, informe o código atual de 6 dígitos.</p><button type="button" id="showQr">MOSTRAR QR CODE / CONFIGURAR AUTENTICADOR</button><form><label>Código temporário<input name="code" placeholder="000000" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" required></label><button>Confirmar código</button></form>`);
   onSubmit($('#gbox form'), async data => {
     const ch = await call(`/auth/v1/factors/${verified.id}/challenge`, {method:'POST', body:{}});
     try { save(await call(`/auth/v1/factors/${verified.id}/verify`, {method:'POST', body:{challenge_id:ch.id, code:data.code}})); }
